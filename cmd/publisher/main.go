@@ -4,25 +4,24 @@ import (
 	"log"
 	"context"
 
-	"chi_nats/internal/httpserver"
+	"chi_nats/internal/config"
 	"chi_nats/internal/messaging"
-
-	"github.com/nats-io/nats.go"
+	"chi_nats/internal/httpserver"
 )
 
 func main() {
-	nc, err := broker.InitNATS(nats.DefaultURL)
+	cfg := config.MustLoad()
+
+	nc, err := broker.InitNATS(cfg.NatsAddr)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer nc.Close()
 
 	publisher := broker.NewPublisher(nc)
-
-	server := httpserver.New(":8080", *publisher)
+	server := httpserver.New(cfg.PublisherAddr, *publisher)
 
 	ctx := context.Background()
-
 	if err := server.Listen(ctx); err != nil {
 		log.Fatal(err)
 	}

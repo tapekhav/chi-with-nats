@@ -33,6 +33,6 @@ func SetRoutes(r *chi.Mux, p broker.Publisher) {
 	)
 
 	r.Route("/publish", func(apiRoute chi.Router) {
-		r.Post("/{subjectName}", publishMessage(p))
+		apiRoute.Post("/{subjectName}", publishMessage(p))
 	})
 }
