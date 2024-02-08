@@ -6,23 +6,23 @@ import (
 	"github.com/nats-io/nats.go"
 )
 
-type Subsriber struct {
+type Subscriber struct {
 	nc *nats.Conn
 }
 
-func (s *Publisher) SubsribeToSubject(
-	subject string, 
+func (s *Subscriber) SubscribeToSubject(
+	subject string,
 	handleMsg func(msg *nats.Msg),
 ) {
 	_, err := s.nc.Subscribe(subject, handleMsg)
 
 	if err != nil {
-		log.Printf("Error publishing message: %v", err)
+		log.Printf("Error subscribing to subject: %v", err)
 	}
 }
 
-func NewSubsciber(nc *nats.Conn) *Subsriber {
-	return &Subsriber{
+func NewSubscriber(nc *nats.Conn) *Subscriber {
+	return &Subscriber{
 		nc: nc,
 	}
 }
