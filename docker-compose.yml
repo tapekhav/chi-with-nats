@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  nats:
+    image: nats:latest
+    ports:
+      - "4222:4222"
+    networks:
+      - mynetwork
+
+  publisher:
+    build:
+      context: .
+      dockerfile: docker/publisher/Dockerfile
+    depends_on:
+      - nats
+    networks:
+      - mynetwork
+    env_file:
+      - config.env
+    environment:
+      - NATS_ADDR=nats:4222 
+    ports:
+      - "8080:8080"
+
+  subscriber:
+    build:
+      context: .
+      dockerfile: docker/subscriber/Dockerfile
+    depends_on:
+      - nats
+    networks:
+      - mynetwork
+    env_file:
+      - config.env
+    environment:
+      - NATS_ADDR=nats:4222
+
+networks:
+  mynetwork:
