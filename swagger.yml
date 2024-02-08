@@ -1,0 +1,51 @@
+openapi: 3.0.0
+info:
+  title: API
+  description: API chi+nats
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8080
+    description: Local development server
+
+paths:
+  /ping:
+    get:
+      summary: Handle all HTTP methods for the "/ping" endpoint
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              example: pong
+
+  /publish/{subjectName}:
+    post:
+      summary: Publishes a message to the specified subject
+      parameters:
+        - in: path
+          name: subjectName
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Message to be published
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestBody'
+      responses:
+        '200':
+          description: OK
+        '404':
+          description: Failed to parse request body
+
+components:
+  schemas:
+    RequestBody:
+      type: object
+      properties:
+        message:
+          type: string
+          description: The message to be published
